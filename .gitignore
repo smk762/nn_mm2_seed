@@ -1,7 +1,10 @@
+DB/
 coins
 mm2
 *.zip
 MM2.json
+mm2.log
+userpass
 
 # Byte-compiled / optimized / DLL files
 __pycache__/

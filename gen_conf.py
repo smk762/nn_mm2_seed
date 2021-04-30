@@ -22,3 +22,6 @@ else:
 	with open("MM2.json", "w+") as f:
 		json.dump(conf, f, indent=4)
 	print("MM2.json file created.")
+	with open("userpass", "w+") as f:
+		f.write(f"userpass={rpc_password}")
+	print("userpass file created.")
