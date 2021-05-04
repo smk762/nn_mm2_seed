@@ -4,7 +4,9 @@ Komodo Platform's [AtomicDEX-API](https://github.com/KomodoPlatform/atomicDEX-AP
 
 With the start of the 5th Komodo Notary Node Season, operators will be running a seed node on their third party (3P) server to further decentralize the network. This expands the current number of seed nodes from half a dozen to over 60 nodes, distributed geographically across the planet, and maintained by a diverse group of respected people within the Komodo community with great expertise in KMD related technologies and the ability to rapidly deploy updates and assist each other with troubleshooting as required.
 
-Operators with the best metrics in terms of uptime and responsiveness to updates will also be rewarded with bonus points towards their Season 5 score, and the chance to win automatic re-election. For each hour of uptime with the correct version, Notary nodes will receive 0.2 points to their season score.
+Operators with the best metrics in terms of uptime and responsiveness to updates will also be rewarded with bonus points towards their Season 5 score, and the chance to win automatic re-election.
+
+**For each hour of uptime with the correct version, Notary Nodes will receive 0.2 points to their season score.**
 
 The simple scripts in this repository will assist operators in setting up their seed node and keeping it up to date whenever update announcements are broadcast.
 
