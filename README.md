@@ -8,6 +8,8 @@ Operators with the best metrics in terms of uptime and responsiveness to updates
 
 **For each hour of uptime with the correct version, Notary Nodes will receive 0.2 points to their season score.**
 
+You'll need to open port 38890 - `sudo ufw allow 38890`
+
 The simple scripts in this repository will assist operators in setting up their seed node and keeping it up to date whenever update announcements are broadcast.
 
 ## gen_conf.py
