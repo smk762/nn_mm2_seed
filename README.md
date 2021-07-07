@@ -10,6 +10,8 @@ Operators with the best metrics in terms of uptime and responsiveness to updates
 
 You'll need to open port 38890 - `sudo ufw allow 38890`
 
+
+
 The simple scripts in this repository will assist operators in setting up their seed node and keeping it up to date whenever update announcements are broadcast.
 
 ## gen_conf.py
@@ -26,3 +28,21 @@ Launches mm2, and logs output.
 
 ## stop_mm2.sh
 Stops mm2.
+
+# Setup
+
+- Clone repository `git clone https://github.com/smk762/nn_mm2_seed/ && cd nn_mm2_seed`
+- Get latest coins file - `./update_coins.sh`
+- Get latest MM2 binary - `./update_mm2.sh`
+- Generate config - `./gen_conf.py` (**Don't use your Notary passphrase!** Use a fresh one. This passphrase will be linked to your **PeerID** and should not be changed later)
+- Start MM2 - `run_mm2.sh`
+- Find your PeerID in mm2.log `cat mm2.log | grep  'Local peer id'`
+- Send the IP address of your server and your PeerID to smk in Discord DM (can be run on Third Party nodes, or a separate VPS)
+
+
+
+
+https://user-images.githubusercontent.com/35845239/124757579-4efd2700-df60-11eb-9e44-2727141d220d.mp4
+
+
+
