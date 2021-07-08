@@ -37,9 +37,7 @@ Stops mm2.
 - Generate config - `./gen_conf.py` (**Don't use your Notary passphrase!** Use a fresh one. This passphrase will be linked to your **PeerID** and should not be changed later)
 - Start MM2 - `run_mm2.sh`
 - Find your PeerID in mm2.log `cat mm2.log | grep  'Local peer id'`
-- Send the IP address of your server and your PeerID to smk in Discord DM (can be run on Third Party nodes, or a separate VPS)
-
-
+- Send the IP address of your server and your PeerID to smk in Discord DM (can be run on Third Party nodes, or a separate VPS in any region)
 
 
 https://user-images.githubusercontent.com/35845239/124757579-4efd2700-df60-11eb-9e44-2727141d220d.mp4
