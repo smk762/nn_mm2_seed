@@ -36,7 +36,7 @@ def get_seedinfo_from_csv():
 	    	notary_seeds.append(dict(row))
 	return notary_seeds
 
-def add_notaries():
+def add_notaries(notary_seeds):
 	# Add to tracking
 	for notary in notary_seeds:
 		params = {
@@ -76,4 +76,4 @@ if __name__ == '__main__':
 		if sys.argv[1] == 'start':
 			start_stats_collection()
 	get_version_stats_from_db()
-conn.close()
+	conn.close()
