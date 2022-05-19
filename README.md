@@ -8,9 +8,6 @@ Operators with the best metrics in terms of uptime and responsiveness to updates
 
 **For each hour of uptime with the correct version, Notary Nodes will receive 0.2 points to their testnet score (starting at epoch timestamp 1653091199)**
 
-You'll need to open port 38890 - `sudo ufw allow 38890`
-And port 15885 - `sudo ufw allow 15885`
-
 
 The simple scripts in this repository will assist operators in setting up their seed node and keeping it up to date whenever update announcements are broadcast.
 
@@ -35,6 +32,8 @@ Stops mm2.
 - Switch to 2022-testnet branch - `git checkout 2022-testnet`
 - Install pip requirements - `pip3 install -r requirements.txt`
 - Install `jq` - `sudo apt install jq`
+- You'll need to open port 38890 - `sudo ufw allow 38890`
+- And port 15885 - `sudo ufw allow 15885`
 - Get latest coins file - `./update_coins.sh`
 - Get latest MM2 binary - `./update_mm2.sh`
 - Generate config - `./gen_conf.py` (**Don't use your Notary passphrase!** Use a fresh one. This passphrase will be linked to your **PeerID** and should not be changed later)
