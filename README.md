@@ -1,4 +1,4 @@
-# Basic scripts for running a MM2 Seed Node on your 2022 Testnnet Node
+# Basic scripts for running a MM2 Seed Node on your 2022 Testnet Node
 
 Komodo Platform's [AtomicDEX-API](https://github.com/KomodoPlatform/atomicDEX-API) is an open-source atomic-swap protocol for trading seamlessly between essentially any blockchain asset in existence. Seed nodes play an essential part in orderbook propagation and relaying information about peers within the network and the status of swaps in progress. 
 
