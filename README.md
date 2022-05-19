@@ -46,7 +46,7 @@ Stops mm2.
 https://user-images.githubusercontent.com/35845239/124757579-4efd2700-df60-11eb-9e44-2727141d220d.mp4
 
 # Additional Resources
-Developer docs: https://developers.komodoplatform.com/basic-docs/atomicdex-api-legacy/rational_number_note.html
-Cipi's MM2 scripts: https://github.com/cipig/mmtools
-PytomicDEX: https://github.com/smk762/pytomicDEX_makerbot
+- Developer docs: https://developers.komodoplatform.com/basic-docs/atomicdex-api-legacy/rational_number_note.html
+- Cipi's MM2 scripts: https://github.com/cipig/mmtools
+- PytomicDEX: https://github.com/smk762/pytomicDEX_makerbot
 
