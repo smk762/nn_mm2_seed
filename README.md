@@ -6,7 +6,7 @@ With the start of the 6th Komodo Notary Node Season, operators will be running a
 
 Operators with the best metrics in terms of uptime and responsiveness to updates will also be rewarded with bonus points towards their Season 5 score, and the chance to win automatic re-election.
 
-**For each hour of uptime with the correct version, Notary Nodes will receive 0.2 points to their testnet score.**
+**For each hour of uptime with the correct version, Notary Nodes will receive 0.2 points to their testnet score (starting at epoch timestamp 1653091199)**
 
 You'll need to open port 38890 - `sudo ufw allow 38890`
 And port 15885 - `sudo ufw allow 15885`
