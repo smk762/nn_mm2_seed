@@ -39,6 +39,7 @@ Stops mm2.
 - Start MM2 - `run_mm2.sh`
 - Find your PeerID in mm2.log `cat mm2.log | grep  'Local peer id'`
 - Send the IP address (or domain name) of your server and your PeerID to smk in Discord DM.
+- To tail the logs in console - `tail -f mm2.log`
 
 https://user-images.githubusercontent.com/35845239/124757579-4efd2700-df60-11eb-9e44-2727141d220d.mp4
 
