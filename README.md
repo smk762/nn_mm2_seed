@@ -40,7 +40,15 @@ Stops mm2.
 - Generate config - `./gen_conf.py` (**Don't use your Notary passphrase!** Use a fresh one. This passphrase will be linked to your **PeerID** and should not be changed later)
 - Start MM2 - `run_mm2.sh`
 - Find your PeerID in mm2.log `cat mm2.log | grep  'Local peer id'`
-- Send the IP address (or domain name) of your server and your PeerID to smk in Discord DM.
+- Get your pubkey - `./get_pubkey.sh`
+- Send the IP address (or domain name) of your server and your PeerID to smk in Discord DM in the following format:
+```json
+        "Dragonhound": {
+            "pubkey": "027a9c3a7302422fd8107c39cc83f4bbf4669a0f41522b7bdcef961e18bf94ab2b",
+            "IP": "195.201.40.82",
+            "PeerID": "12D3KooWPkg85NpwtDJCRwZZxevDwcz7NxjrMcHWLNLfzfrTZZZ1"
+        }
+```
 - To tail the logs in console - `tail -f mm2.log`
 
 https://user-images.githubusercontent.com/35845239/124757579-4efd2700-df60-11eb-9e44-2727141d220d.mp4
