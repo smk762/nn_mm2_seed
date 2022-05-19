@@ -33,6 +33,7 @@ Stops mm2.
 - Clone repository - `git clone https://github.com/smk762/nn_mm2_seed/ && cd nn_mm2_seed`
 - Switch to 2022-testnet branch - `git checkout 2022-testnet`
 - Install pip requirements - `pip3 install -r requirements.txt`
+- Install `jq` - `sudo apt install jq`
 - Get latest coins file - `./update_coins.sh`
 - Get latest MM2 binary - `./update_mm2.sh`
 - Generate config - `./gen_conf.py` (**Don't use your Notary passphrase!** Use a fresh one. This passphrase will be linked to your **PeerID** and should not be changed later)
