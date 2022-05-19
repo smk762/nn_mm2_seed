@@ -14,7 +14,7 @@ conf = {
     "userhome": "/${HOME#\"/\"}"
 }
 
-special_chars = ["$", "@", "~", "-", "_", "|", "(", ")", ":", "+"]
+special_chars = ["@", "~", "-", "_", "|", "(", ")", ":", "+"]
 
 def generate_rpc_pass(length):
 	rpc_pass = ""
