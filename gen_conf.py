@@ -9,6 +9,7 @@ conf = {
     "gui": "NN_SEED",
     "netid": 2022,
     "i_am_seed":True,
+    "seednodes": ["103.195.100.32"],
     "rpc_password": "RPC_CONTROL_USERPASSWORD",
     "passphrase": "YOUR SEED PHRASE",
     "userhome": "/${HOME#\"/\"}"
