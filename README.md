@@ -116,6 +116,7 @@ If you see an error like `'Error reading WSS key/cert file "/etc/letsencrypt/liv
 ```bash
 sudo chown smk762:smk762 /etc/letsencrypt/archive/dev.smk.dog/privkey1.pem
 sudo chown smk762:smk762 /etc/letsencrypt/archive/dev.smk.dog/fullchain1.pem
+sudo setfacl -m 'u:smk762:rx' /etc/letsencrypt/archive /etc/letsencrypt/live    # You might need to 'sudo apt install acl' first
 ```
 
 Once it looks like it is working, you can confirm external connections are being accepted via https://websocketking.com/
