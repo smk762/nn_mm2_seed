@@ -65,7 +65,8 @@ Additional subdomains for each of your nodes can be added as required.
 ![image](https://user-images.githubusercontent.com/35845239/171760521-1f0c3a59-3fbd-4c9e-8abf-6249bd856c57.png)
 
 DNS propagation can take a little while. You can check the progress at https://www.whatsmydns.net and / or via ping in terminal.
-```ping dev.smk.dog```
+
+`ping dev.smk.dog`
 
 ### Step 2: Generate SSL certificates with [LetsEncrypt](https://letsencrypt.org/getting-started/)
 
