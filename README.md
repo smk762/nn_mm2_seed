@@ -51,6 +51,7 @@ This process depend on which webserver you have in use. For further reading, che
 There are many providers, and they are available for as low as $5/year. I'll use https://www.hover.com/domain-pricing for example.
 
 Setup nameservers for DNS propagation - https://help.hover.com/hc/en-us/articles/217282477
+
 Setup DNS records to link IP address with domain - https://help.hover.com/hc/en-us/articles/217282457-Managing-DNS-records-
 
 I'll be using my 3P nodes, though you can run the mm2 seednode on a different server in any region.
