@@ -45,7 +45,8 @@ https://user-images.githubusercontent.com/35845239/124757579-4efd2700-df60-11eb-
 
 
 # WSS Setup
-This process depend on which webserver you have in use. For further reading, check out: https://medium.com/@hack4mer/how-to-setup-wss-for-ratchet-websocket-server-on-nginx-or-apache-c5061229860a
+
+In order for our seed node to be able to process WSS connections, well need to register a domain and generate SSL certificates.
 
 ### Step 1: Obtain a Domain Name
 There are many providers, and they are available for as low as $5/year. I'll use https://www.hover.com/domain-pricing for example.
