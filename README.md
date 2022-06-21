@@ -124,3 +124,27 @@ Once it looks like it is working, you can confirm external connections are being
 
 ![image](https://user-images.githubusercontent.com/35845239/171772951-86d6fb8e-c9d0-40ee-88b6-3124a942d1b8.png)
 
+
+# Additional Resources
+- Developer docs: https://developers.komodoplatform.com/basic-docs/atomicdex-api-legacy/rational_number_note.html
+- Cipi's MM2 scripts: https://github.com/cipig/mmtools
+- PytomicDEX: https://github.com/smk762/pytomicDEX_makerbot
+
+# Notes for running on Ubuntu 18 (GLIBC_2.28 not found error)
+- Update cmake: https://apt.kitware.com/
+- Install Rustup: https://rustup.rs/
+- Install buildessential: `sudo apt install build-essential`
+- Update Rustup:
+```bash
+rustup install nightly-2021-05-17
+rustup default nightly-2021-05-17
+rustup component add rustfmt-preview
+```
+- Build mm2:
+```
+git clone https://github.com/KomodoPlatform/atomicDEX-API
+cd atomicDEX-API
+git checkout 4366141c8 # check for latest valid version hash at https://github.com/smk762/DragonhoundTools/blob/master/atomicdex/seednode_version.json
+cargo build -vv
+```
+Additional build notes at https://github.com/KomodoPlatform/atomicDEX-API/#building-from-source
