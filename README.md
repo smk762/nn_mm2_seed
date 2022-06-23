@@ -78,6 +78,7 @@ sudo apt update && sudo apt upgrade
 sudo apt install snapd
 sudo snap install core; sudo snap refresh core
 sudo apt remove certbot  # Remove older version if existing
+sudo snap install --classic certbot
 sudo ln -s /snap/bin/certbot /usr/bin/certbot
 sudo apt install nginx
 # Temporarily open port 80 so certbot can confirm certificate config
