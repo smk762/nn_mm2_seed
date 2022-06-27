@@ -145,7 +145,7 @@ rustup component add rustfmt-preview
 ```
 git clone https://github.com/KomodoPlatform/atomicDEX-API
 cd atomicDEX-API
-git checkout 4366141c8 # check for latest valid version hash at https://github.com/smk762/DragonhoundTools/blob/master/atomicdex/seednode_version.json
+git checkout b8598439a # check for latest valid version hash at https://github.com/smk762/DragonhoundTools/blob/master/atomicdex/seednode_version.json
 cargo build -vv
 ```
 Additional build notes at https://github.com/KomodoPlatform/atomicDEX-API/#building-from-source
