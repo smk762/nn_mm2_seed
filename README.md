@@ -116,8 +116,7 @@ Start mm2 and review your logs.
 If you see an error like `'Error reading WSS key/cert file "/etc/letsencrypt/live/dev.smk.dog/privkey.pem": Permission denied (os error 13)'` you need to change the ownership of these files for mm2 to be able to access them.
 
 ```bash
-sudo chown smk762:smk762 /etc/letsencrypt/archive/dev.smk.dog/privkey1.pem
-sudo chown smk762:smk762 /etc/letsencrypt/archive/dev.smk.dog/fullchain1.pem
+sudo chown -R smk762:smk762 /etc/letsencrypt/archive/dev.smk.dog/
 sudo setfacl -m 'u:smk762:rx' /etc/letsencrypt/archive /etc/letsencrypt/live    # You might need to 'sudo apt install acl' first
 ```
 
