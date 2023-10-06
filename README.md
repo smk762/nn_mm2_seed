@@ -8,10 +8,6 @@ Operators with the best metrics in terms of uptime and responsiveness to updates
 
 **For each hour of uptime with the correct version, Notary Nodes will receive 0.2 points to their season score.**
 
-You'll need to open port 38890 - `sudo ufw allow 38890`
-
-
-
 The simple scripts in this repository will assist operators in setting up their seed node and keeping it up to date whenever update announcements are broadcast.
 
 ## gen_conf.py
@@ -100,10 +96,11 @@ Once the certs are generated, add entries to your MM2.json as below, substitutin
 ### Step 3: Open the mm2 Seednode WSS Port, and Close Port 80
 
 ```bash
-sudo ufw allow 38900
+sudo ufw allow 42845 comment 'MM2 Seednode TCP'
+sudo ufw allow 42855 comment 'MM2 Seednode WSS'
 sudo ufw status numbered    # To find the ID numbers for port 80
-sudo ufw delete 20          # Remove port 80 on ipv6
-sudo ufw delete 10          # Remove port 80 on ipv4
+sudo ufw delete 20          # Remove port 80 on ipv6 by ID number
+sudo ufw delete 10          # Remove port 80 on ipv4 by ID number
 ```
 
 ### Step 4: Restart MM2

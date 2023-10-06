@@ -18,4 +18,4 @@ def get_from_electrum_ssl(url, port, method, params=[]):
 
 data = {"userpass": "userpass"}
 domain = input("Enter domain: ")
-print(get_from_electrum_ssl(domain, 38900, "version", data))
+print(get_from_electrum_ssl(domain, 42855, "version", data))
