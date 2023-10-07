@@ -3,7 +3,7 @@ coins
 mm2
 *.zip
 libmm2.a
-MM2.json
+MM2*.json
 mm2.log
 userpass
 
