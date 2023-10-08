@@ -7,11 +7,17 @@ import mnemonic
 
 conf = {
     "gui": "NN_SEED",
-    "netid": 7777,
+    "netid": 8762,
     "i_am_seed":True,
     "rpc_password": "RPC_CONTROL_USERPASSWORD",
     "passphrase": "YOUR SEED PHRASE",
-    "userhome": "/${HOME#\"/\"}"
+    "userhome": "/${HOME#\"/\"}",
+        "seednodes": [
+            "streamseed1.komodo.earth",
+            "streamseed2.komodo.earth",
+            "streamseed3.komodo.earth",
+            "streamwatchtower1.komodo.earth"
+        ]
 }
 
 special_chars = ["@", "~", "-", "_", "|", ":", "+"]
@@ -60,3 +66,7 @@ if resp in ["Y", "y"]:
 	with open("userpass", "w+") as f:
 		f.write(f'userpass="{rpc_password}"')
 	print("userpass file created.")
+	print("Please make sure you have opened the p2p ports.")
+	print("sudo ufw allow 42845 comment 'MM2 Seednode TCP'")
+	print("sudo ufw allow 42855 comment 'MM2 Seednode WSS'")
+ 

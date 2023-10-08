@@ -1,16 +1,12 @@
 # Basic scripts for running a MM2 Seed Node on your Notary Node
 
-Komodo Platform's [AtomicDEX-API](https://github.com/KomodoPlatform/atomicDEX-API) is an open-source atomic-swap protocol for trading seamlessly between essentially any blockchain asset in existence. Seed nodes play an essential part in orderbook propagation and relaying information about peers within the network and the status of swaps in progress. 
+Komodo Platform's [komodo-defi-framework](https://github.com/KomodoPlatform/komodo-defi-framework) is an open-source atomic-swap protocol for trading seamlessly between essentially any blockchain asset in existence. Seed nodes play an essential part in orderbook propagation and relaying information about peers within the network and the status of swaps in progress. 
 
 With the start of the 5th Komodo Notary Node Season, operators will be running a seed node on their third party (3P) server to further decentralize the network. This expands the current number of seed nodes from half a dozen to over 60 nodes, distributed geographically across the planet, and maintained by a diverse group of respected people within the Komodo community with great expertise in KMD related technologies and the ability to rapidly deploy updates and assist each other with troubleshooting as required.
 
 Operators with the best metrics in terms of uptime and responsiveness to updates will also be rewarded with bonus points towards their Season 5 score, and the chance to win automatic re-election.
 
 **For each hour of uptime with the correct version, Notary Nodes will receive 0.2 points to their season score.**
-
-You'll need to open port 38890 - `sudo ufw allow 38890`
-
-
 
 The simple scripts in this repository will assist operators in setting up their seed node and keeping it up to date whenever update announcements are broadcast.
 
@@ -21,7 +17,7 @@ Creates an **MM2.json** config file to define node as seed.
 Downloads latest **coins** file from https://github.com/KomodoPlatform/coins/
 
 ## update_mm2.sh
-Downloads latest **mm2** binary from https://github.com/KomodoPlatform/atomicDEX-API/releases
+Downloads latest **mm2** binary from https://github.com/KomodoPlatform/komodo-defi-framework/releases
 
 ## run_mm2.sh
 Launches mm2, and logs output.
@@ -100,10 +96,11 @@ Once the certs are generated, add entries to your MM2.json as below, substitutin
 ### Step 3: Open the mm2 Seednode WSS Port, and Close Port 80
 
 ```bash
-sudo ufw allow 38900
+sudo ufw allow 42845 comment 'MM2 Seednode TCP'
+sudo ufw allow 42855 comment 'MM2 Seednode WSS'
 sudo ufw status numbered    # To find the ID numbers for port 80
-sudo ufw delete 20          # Remove port 80 on ipv6
-sudo ufw delete 10          # Remove port 80 on ipv4
+sudo ufw delete 20          # Remove port 80 on ipv6 by ID number
+sudo ufw delete 10          # Remove port 80 on ipv4 by ID number
 ```
 
 ### Step 4: Restart MM2
@@ -126,7 +123,7 @@ Once it looks like it is working, you can confirm external connections are being
 
 
 # Additional Resources
-- Developer docs: https://developers.komodoplatform.com/basic-docs/atomicdex-api-legacy/rational_number_note.html
+- Developer docs: https://developers.komodoplatform.com/
 - Cipi's MM2 scripts: https://github.com/cipig/mmtools
 - PytomicDEX: https://github.com/smk762/pytomicDEX_makerbot
 
@@ -142,9 +139,9 @@ rustup component add rustfmt-preview
 ```
 - Build mm2:
 ```
-git clone https://github.com/KomodoPlatform/atomicDEX-API
-cd atomicDEX-API
+git clone https://github.com/KomodoPlatform/komodo-defi-framework
+cd komodo-defi-framework
 git checkout b8598439a # check for latest valid version hash at https://github.com/smk762/DragonhoundTools/blob/master/atomicdex/seednode_version.json
 cargo build -vv
 ```
-Additional build notes at https://github.com/KomodoPlatform/atomicDEX-API/#building-from-source
+Additional build notes at https://github.com/KomodoPlatform/komodo-defi-framework/#building-from-source
