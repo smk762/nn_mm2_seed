@@ -1,8 +1,23 @@
 services:
   certbot:
     image: certbot/certbot:latest
-    entrypoint: ["/bin/sh","-c"]
-    command: "sh /work/certbot-run.sh"
+    command:
+      - /bin/sh
+      - -c
+      - |
+        set -eu
+        echo "Certbot: starting for DOMAIN=${DOMAIN}"
+        if [ -z "${DOMAIN:-}" ] || [ -z "${LETSENCRYPT_EMAIL:-}" ]; then
+          echo "Certbot: DOMAIN and LETSENCRYPT_EMAIL must be set"; exit 1; fi
+        certbot certonly --standalone --non-interactive --agree-tos \
+          -m "${LETSENCRYPT_EMAIL}" -d "${DOMAIN}" --keep-until-expiring \
+          --preferred-challenges http || true
+        echo "Certbot: initial request complete"
+        while :; do
+          echo "Certbot: running renewal check..."
+          certbot renew --standalone --no-random-sleep-on-renew || true
+          sleep 12h
+        done
     environment:
       - DOMAIN=${DOMAIN}
       - LETSENCRYPT_EMAIL=${LETSENCRYPT_EMAIL}
@@ -10,7 +25,6 @@ services:
       - "80:80"
     volumes:
       - letsencrypt:/etc/letsencrypt
-      - .:/work:ro
     restart: unless-stopped
 
   mm2:
