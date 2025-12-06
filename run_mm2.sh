@@ -48,14 +48,29 @@ jq -n \
   disable_p2p: false
 }' > "$TMP_CONF"
 
-if [ -n "$DOMAIN" ] && [ -f "/etc/letsencrypt/live/${DOMAIN}/privkey.pem" ] && [ -f "/etc/letsencrypt/live/${DOMAIN}/fullchain.pem" ]; then
+CERT_BASE=""
+if [ -n "$DOMAIN" ] && [ -f "/etc/letsencrypt/export/${DOMAIN}/privkey.pem" ] && [ -f "/etc/letsencrypt/export/${DOMAIN}/fullchain.pem" ]; then
+CERT_BASE="/etc/letsencrypt/export/${DOMAIN}"
+elif [ -n "$DOMAIN" ] && [ -f "/etc/letsencrypt/live/${DOMAIN}/privkey.pem" ] && [ -f "/etc/letsencrypt/live/${DOMAIN}/fullchain.pem" ]; then
+CERT_BASE="/etc/letsencrypt/live/${DOMAIN}"
+fi
+if [ -n "$CERT_BASE" ]; then
 TMP2="$(mktemp)"
-jq --arg d "$DOMAIN" \
-'. + { wss_certs: { server_priv_key: ("/etc/letsencrypt/live/" + $d + "/privkey.pem"), certificate: ("/etc/letsencrypt/live/" + $d + "/fullchain.pem") } }' "$TMP_CONF" > "$TMP2" && mv "$TMP2" "$TMP_CONF"
+jq --arg base "$CERT_BASE" \
+'. + { wss_certs: { server_priv_key: ($base + "/privkey.pem"), certificate: ($base + "/fullchain.pem") } }' "$TMP_CONF" > "$TMP2" && mv "$TMP2" "$TMP_CONF"
 fi
 
 mv "$TMP_CONF" MM2.json
 echo "userpass=\"$RPC_PASS\"" > userpass
+fi
+
+# Ensure USERPASS matches MM2.json rpc_password and sync userpass file
+if [ -f MM2.json ]; then
+RPC_FROM_JSON="$(jq -r '.rpc_password // empty' MM2.json)"
+if [ -n "$RPC_FROM_JSON" ]; then
+USERPASS="$RPC_FROM_JSON"
+echo "userpass=\"$USERPASS\"" > userpass
+fi
 fi
 
 # Refresh seednodes from remote list before starting
