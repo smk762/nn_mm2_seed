@@ -45,6 +45,7 @@ Notes:
 - The stats script at `api/collect_seednode_stats.py` is not required for running a seed node.
 - First boot is non-interactive: if `MM2.json` does not exist, it is generated automatically using `USERPASS` and `PASSPHRASE` envs (or securely generated defaults). If `DOMAIN` is set and certificates exist, `wss_certs` is added automatically.
 - Certbot runs continuously inside its container and will attempt automatic renewals every ~12 hours using the standalone HTTP challenge on port 80. Ensure TCP/80 is reachable from the internet for issuance and renewals.
+- The `coins` file is refreshed automatically on each start from `https://raw.githubusercontent.com/GLEECBTC/coins/refs/heads/master/coins` and saved to `~/.kdf/coins` inside the container.
 
 ## gen_conf.py
 Creates an **MM2.json** config file to define node as seed.

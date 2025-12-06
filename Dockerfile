@@ -21,7 +21,7 @@ RUN set -eux; \
 	fi
 
 ENV MM2_CONF_PATH=/home/komodian/kdf/MM2.json
-ENV MM_COINS_PATH=/home/komodian/kdf/coins
+ENV MM_COINS_PATH=/home/komodian/.kdf/coins
 ENV MM_LOG=/home/komodian/kdf/kdf.log
 ENV USERPASS=RPC_UserP@SSW0RD
 

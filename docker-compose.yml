@@ -3,10 +3,11 @@ version: "3.9"
 services:
   certbot:
     image: certbot/certbot:latest
+    entrypoint: ["/bin/sh","-c"]
     command: >-
-      sh -c "certbot certonly --standalone --non-interactive --agree-tos 
-      -m ${LETSENCRYPT_EMAIL} -d ${DOMAIN} --keep-until-expiring --preferred-challenges http && 
-      while :; do certbot renew --standalone --no-random-sleep-on-renew; sleep 12h; done"
+      certbot certonly --standalone --non-interactive --agree-tos
+      -m ${LETSENCRYPT_EMAIL} -d ${DOMAIN} --keep-until-expiring --preferred-challenges http &&
+      while :; do certbot renew --standalone --no-random-sleep-on-renew; sleep 12h; done
     ports:
       - "80:80"
     volumes:

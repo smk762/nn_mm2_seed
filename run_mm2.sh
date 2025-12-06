@@ -65,6 +65,14 @@ TMP="$(mktemp)"
 jq --argjson seeds "$SEEDS" '.seednodes = $seeds' MM2.json > "$TMP" && mv "$TMP" MM2.json
 fi
 
+# Update coins file on each start into ~/.kdf/coins
+mkdir -p "$HOME/.kdf"
+if COINS_TMP=$(mktemp) && curl -fsSL https://raw.githubusercontent.com/GLEECBTC/coins/refs/heads/master/coins -o "$COINS_TMP"; then
+mv "$COINS_TMP" "$HOME/.kdf/coins"
+else
+echo "Warning: failed to fetch coins file; continuing with existing file (if any)."
+fi
+
 # Start mm2 and verify
 stdbuf -oL ./mm2 > mm2.log &
 sleep 3
