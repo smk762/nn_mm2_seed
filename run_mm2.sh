@@ -72,14 +72,20 @@ USERPASS="$RPC_FROM_JSON"
 echo "userpass=\"$USERPASS\"" > userpass
 fi
 fi
+echo "Userpass: $USERPASS"
 
+
+echo "Updating seednodes..."
 # Refresh seednodes from remote list before starting
 SEEDS=$(curl -fsSL https://raw.githubusercontent.com/GLEECBTC/coins/master/seed-nodes.json | jq -c '[.[].host]')
 if [ -n "$SEEDS" ] && [ "$SEEDS" != "null" ] && [ -f MM2.json ]; then
 TMP="$(mktemp)"
 jq --argjson seeds "$SEEDS" '.seednodes = $seeds' MM2.json > "$TMP" && mv "$TMP" MM2.json
 fi
+echo "Seednodes: $SEEDS"
 
+
+echo "Updating coins file..."
 # Update coins file on each start into ~/.kdf/coins
 mkdir -p "$HOME/.kdf"
 if COINS_TMP=$(mktemp) && curl -fsSL https://raw.githubusercontent.com/GLEECBTC/coins/refs/heads/master/coins -o "$COINS_TMP"; then
