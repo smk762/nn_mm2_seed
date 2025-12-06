@@ -1,17 +1,13 @@
-version: "3.9"
-
 services:
   certbot:
     image: certbot/certbot:latest
     entrypoint: ["/bin/sh","-c"]
-    command: >-
-      certbot certonly --standalone --non-interactive --agree-tos
-      -m ${LETSENCRYPT_EMAIL} -d ${DOMAIN} --keep-until-expiring --preferred-challenges http &&
-      while :; do certbot renew --standalone --no-random-sleep-on-renew; sleep 12h; done
+    command: "sh /work/certbot-run.sh"
     ports:
       - "80:80"
     volumes:
       - letsencrypt:/etc/letsencrypt
+      - .:/work:ro
     restart: unless-stopped
 
   mm2:
