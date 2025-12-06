@@ -88,6 +88,8 @@ else
 echo "Warning: failed to fetch coins file; continuing with existing file (if any)."
 fi
 
+
+
 # Start mm2 and verify
 stdbuf -oL ./mm2 > mm2.log &
 sleep 3
@@ -96,3 +98,5 @@ curl --url "http://127.0.0.1:7783" --data "{\"method\":\"version\",\"userpass\":
 else
 echo "Warning: USERPASS not set; unable to query version."
 fi
+
+tail -f mm2.log
