@@ -31,35 +31,39 @@ services:
     environment:
       - DOMAIN=${DOMAIN}
       - LETSENCRYPT_EMAIL=${LETSENCRYPT_EMAIL}
+      - USER_ID=${USER_ID:-1000}
+      - GROUP_ID=${GROUP_ID:-1000}
     ports:
       - "80:80"
     volumes:
       - letsencrypt:/etc/letsencrypt
     restart: unless-stopped
 
-  mm2:
+  kdf:
     build:
       context: .
       dockerfile: Dockerfile
       args:
         USER_ID: ${USER_ID:-1000}
         GROUP_ID: ${GROUP_ID:-1000}
+    user: "0:0"
     command: >-
       sh -c "until [ -f /etc/letsencrypt/export/${DOMAIN}/fullchain.pem ] && 
                     [ -f /etc/letsencrypt/export/${DOMAIN}/privkey.pem ]; do 
                   echo 'Waiting for certificates...'; sleep 10; done; 
-              ./run_mm2.sh"
+              ./run_kdf.sh"
     environment:
       - USERPASS=${USERPASS:-RPC_UserP@SSW0RD}
       - DOMAIN=${DOMAIN}
       - PASSPHRASE=${PASSPHRASE:-}
+      - HOME=/home/komodian
     volumes:
       - .:/home/komodian/kdf
       - letsencrypt:/etc/letsencrypt:ro
-    expose:
-      - "7783"
     ports:
+      - "7783:7783"
       - "42855:42855"
+      - "42845:42845"
     depends_on:
       - certbot
 

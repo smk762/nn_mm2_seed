@@ -27,6 +27,8 @@ RPC_PASS="$(generate_password)"
 USERPASS="$RPC_PASS"
 fi
 SEED_PASSPHRASE="${PASSPHRASE}"
+echo "PASSPHRASE: $PASSPHRASE"
+echo "SEED_PASSPHRASE: $SEED_PASSPHRASE"
 if [ -z "$SEED_PASSPHRASE" ]; then
 SEED_PASSPHRASE="$(generate_passphrase)"
 fi
@@ -48,20 +50,24 @@ jq -n \
   disable_p2p: false
 }' > "$TMP_CONF"
 
-CERT_BASE=""
-if [ -n "$DOMAIN" ] && [ -f "/etc/letsencrypt/export/${DOMAIN}/privkey.pem" ] && [ -f "/etc/letsencrypt/export/${DOMAIN}/fullchain.pem" ]; then
-CERT_BASE="/etc/letsencrypt/export/${DOMAIN}"
-elif [ -n "$DOMAIN" ] && [ -f "/etc/letsencrypt/live/${DOMAIN}/privkey.pem" ] && [ -f "/etc/letsencrypt/live/${DOMAIN}/fullchain.pem" ]; then
-CERT_BASE="/etc/letsencrypt/live/${DOMAIN}"
-fi
-if [ -n "$CERT_BASE" ]; then
-TMP2="$(mktemp)"
-jq --arg base "$CERT_BASE" \
-'. + { wss_certs: { server_priv_key: ($base + "/privkey.pem"), certificate: ($base + "/fullchain.pem") } }' "$TMP_CONF" > "$TMP2" && mv "$TMP2" "$TMP_CONF"
-fi
-
 mv "$TMP_CONF" MM2.json
 echo "userpass=\"$RPC_PASS\"" > userpass
+fi
+
+# Ensure WSS cert paths are present/updated when certs exist
+CERT_BASE=""
+if [ -n "$DOMAIN" ]; then
+if [ -f "/etc/letsencrypt/export/${DOMAIN}/privkey.pem" ] && [ -f "/etc/letsencrypt/export/${DOMAIN}/fullchain.pem" ]; then
+CERT_BASE="/etc/letsencrypt/export/${DOMAIN}"
+elif [ -f "/etc/letsencrypt/live/${DOMAIN}/privkey.pem" ] && [ -f "/etc/letsencrypt/live/${DOMAIN}/fullchain.pem" ]; then
+CERT_BASE="/etc/letsencrypt/live/${DOMAIN}"
+fi
+fi
+if [ -n "$CERT_BASE" ] && [ -f MM2.json ]; then
+TMP_CERT="$(mktemp)"
+jq --arg base "$CERT_BASE" \
+'.wss_certs = { server_priv_key: ($base + "/privkey.pem"), certificate: ($base + "/fullchain.pem") }' \
+MM2.json > "$TMP_CERT" && mv "$TMP_CERT" MM2.json
 fi
 
 # Ensure USERPASS matches MM2.json rpc_password and sync userpass file
@@ -84,6 +90,7 @@ jq --argjson seeds "$SEEDS" '.seednodes = $seeds' MM2.json > "$TMP" && mv "$TMP"
 fi
 echo "Seednodes: $SEEDS"
 
+cat MM2.json
 
 echo "Updating coins file..."
 # Update coins file on each start into ~/.kdf/coins
@@ -96,8 +103,13 @@ fi
 
 
 
+
 # Start mm2 and verify
-stdbuf -oL ./mm2 > mm2.log &
+which kdf
+echo "Starting kdf..."
+echo "" > ~/kdf.log
+stdbuf -oL kdf > ~/kdf.log &
+
 sleep 3
 if [ -n "$USERPASS" ]; then
 curl --url "http://127.0.0.1:7783" --data "{\"method\":\"version\",\"userpass\":\"$USERPASS\"}"
@@ -105,4 +117,5 @@ else
 echo "Warning: USERPASS not set; unable to query version."
 fi
 
-tail -f mm2.log
+ls -al ~/kdf.log
+tail -f ~/kdf.log
