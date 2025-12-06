@@ -6,12 +6,14 @@ import os.path
 import mnemonic
 
 conf = {
-    "gui": "NN_SEED",
-    "netid": 7777,
+    "gui": "DRAGON_SEED",
+    "netid": 8762,
     "i_am_seed":True,
     "rpc_password": "RPC_CONTROL_USERPASSWORD",
     "passphrase": "YOUR SEED PHRASE",
-    "userhome": "/${HOME#\"/\"}"
+    "userhome": "/${HOME#\"/\"}",
+	"seednodes": [],
+    "disable_p2p": False
 }
 
 special_chars = ["@", "~", "-", "_", "|", ":", "+"]

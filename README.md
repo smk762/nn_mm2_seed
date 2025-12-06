@@ -14,6 +14,38 @@ You'll need to open port 38890 - `sudo ufw allow 38890`
 
 The simple scripts in this repository will assist operators in setting up their seed node and keeping it up to date whenever update announcements are broadcast.
 
+## One-click (Docker Compose)
+
+The included `docker-compose.yml` provides a turnkey setup. It provisions/renews LetsEncrypt certs and runs the mm2 seednode. On every start, `run_mm2.sh` refreshes the `seednodes` field in `MM2.json` from `https://raw.githubusercontent.com/GLEECBTC/coins/master/seed-nodes.json` to keep peers current.
+
+1) Install Docker and Docker Compose plugin  
+2) Create a `.env` file in the repo root with your settings:
+
+```bash
+DOMAIN=your.subdomain.tld
+LETSENCRYPT_EMAIL=you@example.com
+# Optional: predefine RPC password (else generated/loaded)
+USERPASS=RPC_UserP@SSW0RD
+# Optional: predefine your mm2 passphrase (else generated)
+# PASSPHRASE=correct horse battery staple
+# Optional: build-time IDs (defaults 1000/1000)
+# USER_ID=1000
+# GROUP_ID=1000
+```
+
+3) From the repo root, start:
+
+```bash
+docker compose up -d
+```
+
+Notes:
+- Certificates are created by the `certbot` service and mounted read-only to the `mm2` service.
+- `run_mm2.sh` auto-updates `MM2.json` `seednodes` from the remote list on each start.
+- The stats script at `api/collect_seednode_stats.py` is not required for running a seed node.
+- First boot is non-interactive: if `MM2.json` does not exist, it is generated automatically using `USERPASS` and `PASSPHRASE` envs (or securely generated defaults). If `DOMAIN` is set and certificates exist, `wss_certs` is added automatically.
+- Certbot runs continuously inside its container and will attempt automatic renewals every ~12 hours using the standalone HTTP challenge on port 80. Ensure TCP/80 is reachable from the internet for issuance and renewals.
+
 ## gen_conf.py
 Creates an **MM2.json** config file to define node as seed.
 
@@ -100,7 +132,7 @@ Once the certs are generated, add entries to your MM2.json as below, substitutin
 ### Step 3: Open the mm2 Seednode WSS Port, and Close Port 80
 
 ```bash
-sudo ufw allow 38900
+sudo ufw allow 42855
 sudo ufw status numbered    # To find the ID numbers for port 80
 sudo ufw delete 20          # Remove port 80 on ipv6
 sudo ufw delete 10          # Remove port 80 on ipv4

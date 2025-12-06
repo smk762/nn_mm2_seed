@@ -1,0 +1,45 @@
+version: "3.9"
+
+services:
+  certbot:
+    image: certbot/certbot:latest
+    command: >-
+      sh -c "certbot certonly --standalone --non-interactive --agree-tos 
+      -m ${LETSENCRYPT_EMAIL} -d ${DOMAIN} --keep-until-expiring --preferred-challenges http && 
+      while :; do certbot renew --standalone --no-random-sleep-on-renew; sleep 12h; done"
+    ports:
+      - "80:80"
+    volumes:
+      - letsencrypt:/etc/letsencrypt
+    restart: unless-stopped
+
+  mm2:
+    build:
+      context: .
+      dockerfile: Dockerfile
+      args:
+        USER_ID: ${USER_ID:-1000}
+        GROUP_ID: ${GROUP_ID:-1000}
+    command: >-
+      sh -c "until [ -f /etc/letsencrypt/live/${DOMAIN}/fullchain.pem ] && 
+                    [ -f /etc/letsencrypt/live/${DOMAIN}/privkey.pem ]; do 
+                  echo 'Waiting for certificates...'; sleep 10; done; 
+              ./run_mm2.sh"
+    environment:
+      - USERPASS=${USERPASS:-RPC_UserP@SSW0RD}
+      - DOMAIN=${DOMAIN}
+      - PASSPHRASE=${PASSPHRASE:-}
+    volumes:
+      - .:/home/komodian/kdf
+      - letsencrypt:/etc/letsencrypt:ro
+    expose:
+      - "7783"
+    ports:
+      - "42855:42855"
+    depends_on:
+      - certbot
+
+volumes:
+  letsencrypt:
+
+
