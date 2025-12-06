@@ -3,6 +3,9 @@ services:
     image: certbot/certbot:latest
     entrypoint: ["/bin/sh","-c"]
     command: "sh /work/certbot-run.sh"
+    environment:
+      - DOMAIN=${DOMAIN}
+      - LETSENCRYPT_EMAIL=${LETSENCRYPT_EMAIL}
     ports:
       - "80:80"
     volumes:
