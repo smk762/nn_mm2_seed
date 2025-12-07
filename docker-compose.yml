@@ -61,7 +61,7 @@ services:
       - .:/home/komodian/kdf
       - letsencrypt:/etc/letsencrypt:ro
     ports:
-      - "7783:7783"
+      - "127.0.0.1:7783:7783"
       - "42855:42855"
       - "42845:42845"
     depends_on:
