@@ -1,0 +1,73 @@
+services:
+  certbot:
+    image: certbot/certbot:latest
+    entrypoint: []
+    command:
+      - /bin/sh
+      - -euxc
+      - |
+        echo "Certbot: starting for DOMAIN=${DOMAIN}"
+        if [ -z "${DOMAIN:-}" ] || [ -z "${LETSENCRYPT_EMAIL:-}" ]; then
+          echo "Certbot: DOMAIN and LETSENCRYPT_EMAIL must be set"; sleep 3600; exit 1; fi
+        certbot certonly --standalone --non-interactive --agree-tos \
+          -m "${LETSENCRYPT_EMAIL}" -d "${DOMAIN}" --keep-until-expiring \
+          --preferred-challenges http || true
+        # Export readable copies for mm2 (avoid archive symlink/permissions)
+        mkdir -p /etc/letsencrypt/export/"${DOMAIN}"
+        cp -L /etc/letsencrypt/live/"${DOMAIN}"/fullchain.pem /etc/letsencrypt/export/"${DOMAIN}"/fullchain.pem || true
+        cp -L /etc/letsencrypt/live/"${DOMAIN}"/privkey.pem /etc/letsencrypt/export/"${DOMAIN}"/privkey.pem || true
+        chmod 644 /etc/letsencrypt/export/"${DOMAIN}"/fullchain.pem || true
+        chmod 600 /etc/letsencrypt/export/"${DOMAIN}"/privkey.pem || true
+        while :; do
+          echo "Certbot: running renewal check..."
+          certbot renew --standalone --no-random-sleep-on-renew || true
+          mkdir -p /etc/letsencrypt/export/"${DOMAIN}"
+          cp -L /etc/letsencrypt/live/"${DOMAIN}"/fullchain.pem /etc/letsencrypt/export/"${DOMAIN}"/fullchain.pem || true
+          cp -L /etc/letsencrypt/live/"${DOMAIN}"/privkey.pem /etc/letsencrypt/export/"${DOMAIN}"/privkey.pem || true
+          chmod 644 /etc/letsencrypt/export/"${DOMAIN}"/fullchain.pem || true
+          chmod 600 /etc/letsencrypt/export/"${DOMAIN}"/privkey.pem || true
+          sleep 12h
+        done
+    environment:
+      - DOMAIN=${DOMAIN}
+      - LETSENCRYPT_EMAIL=${LETSENCRYPT_EMAIL}
+      - USER_ID=${USER_ID:-1000}
+      - GROUP_ID=${GROUP_ID:-1000}
+    ports:
+      - "80:80"
+    volumes:
+      - letsencrypt:/etc/letsencrypt
+    restart: unless-stopped
+
+  kdf:
+    build:
+      context: .
+      dockerfile: Dockerfile
+      args:
+        USER_ID: ${USER_ID:-1000}
+        GROUP_ID: ${GROUP_ID:-1000}
+    user: "0:0"
+    command: >-
+      sh -c "until [ -f /etc/letsencrypt/export/${DOMAIN}/fullchain.pem ] && 
+                    [ -f /etc/letsencrypt/export/${DOMAIN}/privkey.pem ]; do 
+                  echo 'Waiting for certificates...'; sleep 10; done; 
+              ./run_kdf.sh"
+    environment:
+      - USERPASS=${USERPASS:-RPC_UserP@SSW0RD}
+      - DOMAIN=${DOMAIN}
+      - PASSPHRASE=${PASSPHRASE:-}
+      - HOME=/home/komodian
+    volumes:
+      - .:/home/komodian/kdf
+      - letsencrypt:/etc/letsencrypt:ro
+    ports:
+      - "7783:7783"
+      - "42855:42855"
+      - "42845:42845"
+    depends_on:
+      - certbot
+
+volumes:
+  letsencrypt:
+
+
