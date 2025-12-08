@@ -1,6 +1,6 @@
 services:
   certbot:
-    image: certbot/certbot:latest
+    image: certbot/dns-cloudflare:latest
     entrypoint: []
     command:
       - /bin/sh
@@ -9,30 +9,71 @@ services:
         echo "Certbot: starting for DOMAIN=${DOMAIN}"
         if [ -z "${DOMAIN:-}" ] || [ -z "${LETSENCRYPT_EMAIL:-}" ]; then
           echo "Certbot: DOMAIN and LETSENCRYPT_EMAIL must be set"; sleep 3600; exit 1; fi
-        certbot certonly --standalone --non-interactive --agree-tos \
-          -m "${LETSENCRYPT_EMAIL}" -d "${DOMAIN}" --keep-until-expiring \
-          --preferred-challenges http || true
-        # Export readable copies for mm2 (avoid archive symlink/permissions)
-        mkdir -p /etc/letsencrypt/export/"${DOMAIN}"
-        cp -L /etc/letsencrypt/live/"${DOMAIN}"/fullchain.pem /etc/letsencrypt/export/"${DOMAIN}"/fullchain.pem || true
-        cp -L /etc/letsencrypt/live/"${DOMAIN}"/privkey.pem /etc/letsencrypt/export/"${DOMAIN}"/privkey.pem || true
-        chmod 644 /etc/letsencrypt/export/"${DOMAIN}"/fullchain.pem || true
-        chmod 600 /etc/letsencrypt/export/"${DOMAIN}"/privkey.pem || true
-        while :; do
-          echo "Certbot: running renewal check..."
-          certbot renew --standalone --no-random-sleep-on-renew || true
+        
+        # Check if CloudFlare API token is provided
+        if [ -n "${CLOUDFLARE_API_TOKEN:-}" ]; then
+          echo "Certbot: Using CloudFlare DNS plugin"
+          # Create CloudFlare credentials file
+          mkdir -p /etc/letsencrypt
+          echo "dns_cloudflare_api_token = ${CLOUDFLARE_API_TOKEN}" > /etc/letsencrypt/cloudflare.ini
+          chmod 600 /etc/letsencrypt/cloudflare.ini
+          
+          # Initial certificate request with DNS challenge
+          certbot certonly --dns-cloudflare --dns-cloudflare-credentials /etc/letsencrypt/cloudflare.ini \
+            --non-interactive --agree-tos -m "${LETSENCRYPT_EMAIL}" -d "${DOMAIN}" \
+            --keep-until-expiring || true
+          
+          # Export readable copies for mm2 (avoid archive symlink/permissions)
           mkdir -p /etc/letsencrypt/export/"${DOMAIN}"
           cp -L /etc/letsencrypt/live/"${DOMAIN}"/fullchain.pem /etc/letsencrypt/export/"${DOMAIN}"/fullchain.pem || true
           cp -L /etc/letsencrypt/live/"${DOMAIN}"/privkey.pem /etc/letsencrypt/export/"${DOMAIN}"/privkey.pem || true
           chmod 644 /etc/letsencrypt/export/"${DOMAIN}"/fullchain.pem || true
           chmod 600 /etc/letsencrypt/export/"${DOMAIN}"/privkey.pem || true
-          sleep 12h
-        done
+          
+          while :; do
+            echo "Certbot: running renewal check..."
+            certbot renew --dns-cloudflare --dns-cloudflare-credentials /etc/letsencrypt/cloudflare.ini \
+              --no-random-sleep-on-renew || true
+            mkdir -p /etc/letsencrypt/export/"${DOMAIN}"
+            cp -L /etc/letsencrypt/live/"${DOMAIN}"/fullchain.pem /etc/letsencrypt/export/"${DOMAIN}"/fullchain.pem || true
+            cp -L /etc/letsencrypt/live/"${DOMAIN}"/privkey.pem /etc/letsencrypt/export/"${DOMAIN}"/privkey.pem || true
+            chmod 644 /etc/letsencrypt/export/"${DOMAIN}"/fullchain.pem || true
+            chmod 600 /etc/letsencrypt/export/"${DOMAIN}"/privkey.pem || true
+            sleep 12h
+          done
+        else
+          echo "Certbot: Using standalone mode (port 80 required)"
+          certbot certonly --standalone --non-interactive --agree-tos \
+            -m "${LETSENCRYPT_EMAIL}" -d "${DOMAIN}" --keep-until-expiring \
+            --preferred-challenges http || true
+          # Export readable copies for mm2 (avoid archive symlink/permissions)
+          mkdir -p /etc/letsencrypt/export/"${DOMAIN}"
+          cp -L /etc/letsencrypt/live/"${DOMAIN}"/fullchain.pem /etc/letsencrypt/export/"${DOMAIN}"/fullchain.pem || true
+          cp -L /etc/letsencrypt/live/"${DOMAIN}"/privkey.pem /etc/letsencrypt/export/"${DOMAIN}"/privkey.pem || true
+          chmod 644 /etc/letsencrypt/export/"${DOMAIN}"/fullchain.pem || true
+          chmod 600 /etc/letsencrypt/export/"${DOMAIN}"/privkey.pem || true
+          while :; do
+            echo "Certbot: running renewal check..."
+            certbot renew --standalone --no-random-sleep-on-renew || true
+            mkdir -p /etc/letsencrypt/export/"${DOMAIN}"
+            cp -L /etc/letsencrypt/live/"${DOMAIN}"/fullchain.pem /etc/letsencrypt/export/"${DOMAIN}"/fullchain.pem || true
+            cp -L /etc/letsencrypt/live/"${DOMAIN}"/privkey.pem /etc/letsencrypt/export/"${DOMAIN}"/privkey.pem || true
+            chmod 644 /etc/letsencrypt/export/"${DOMAIN}"/fullchain.pem || true
+            chmod 600 /etc/letsencrypt/export/"${DOMAIN}"/privkey.pem || true
+            sleep 12h
+          done
+        fi
     environment:
       - DOMAIN=${DOMAIN}
       - LETSENCRYPT_EMAIL=${LETSENCRYPT_EMAIL}
+      - CLOUDFLARE_API_TOKEN=${CLOUDFLARE_API_TOKEN:-}
       - USER_ID=${USER_ID:-1000}
       - GROUP_ID=${GROUP_ID:-1000}
+    # Port 80 is only needed for standalone mode (when CLOUDFLARE_API_TOKEN is not set)
+    # When using CloudFlare DNS plugin, port 80 is not needed and won't be used.
+    # Note: docker-compose doesn't support conditional port mapping, so port 80 will be mapped
+    # but remain unused when DNS plugin is active. To completely disable port mapping,
+    # you can manually remove this ports section when using DNS plugin.
     ports:
       - "80:80"
     volumes:
